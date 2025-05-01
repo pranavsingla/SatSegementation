@@ -2,6 +2,26 @@ from src.quad import QuadTreeNode
 import cv2
 import numpy as np
 
+def collect_quadtree_stats(node):
+    """
+    Returns (leaf_count, total_area) for the subtree rooted at `node`.
+    """
+    if node is None:
+        return 0, 0
+
+    # If it's a leaf, count it and add its pixel‐area
+    if node.is_leaf:
+        return 1, node.width * node.height
+
+    # Otherwise recurse on children
+    leaf_count = 0
+    total_area = 0
+    for child in node.children:
+        c_count, c_area = collect_quadtree_stats(child)
+        leaf_count += c_count
+        total_area += c_area
+    return leaf_count, total_area
+
 
 def calculate_region_stats_color(image_color, x, y, width, height, calculate_gradient=False, grad_mag=None):
     """Calculates stats for a color region."""

@@ -1,6 +1,6 @@
 import cv2
 from src.quad import QuadTreeNode
-from src.utils import  calculate_gradient_magnitude, build_quadtree_color, draw_segmentation_color, draw_boundaries
+from src.utils import  calculate_gradient_magnitude, build_quadtree_color, draw_segmentation_color, draw_boundaries, collect_quadtree_stats
 import numpy as np
 import time
 import matplotlib.pyplot as plt
@@ -43,6 +43,24 @@ def main(image_path, intensity_threshold=25, max_depths_to_test=[4, 6, 8], use_t
             texture_threshold=texture_threshold,
             grad_mag=gradient_magnitude # Pass pre-calculated gradient
         )
+
+        # --- compute exact stats ---
+        leaf_count, total_area = collect_quadtree_stats(quadtree_root)
+        mean_region_size = total_area / leaf_count if leaf_count else 0
+
+        # store or print them
+        print(f"Depth={max_depth:2d} →  leaves={leaf_count:4d}, "
+            f"mean region size={mean_region_size:.1f} px², "
+            f"time={processing_time:.2f}s")
+
+        # you can also save into results:
+        results[max_depth] = {
+            'segmented': segmented_image_color,
+            'boundary': boundary_image_color,
+            'time': processing_time,
+            'leaves': leaf_count,
+            'mean_area': mean_region_size
+        }
 
         # Create output image for color segmentation visualization
         segmented_image_color = np.zeros_like(image_color)
