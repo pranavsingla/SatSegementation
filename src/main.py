@@ -50,17 +50,17 @@ def main(image_path, intensity_threshold=25, max_depths_to_test=[4, 6, 8], use_t
 
         # store or print them
         print(f"Depth={max_depth:2d} →  leaves={leaf_count:4d}, "
-            f"mean region size={mean_region_size:.1f} px², "
-            f"time={processing_time:.2f}s")
+            f"mean region size={mean_region_size:.1f} px², ")
+            # f"time={processing_time:.2f}s")
 
-        # you can also save into results:
-        results[max_depth] = {
-            'segmented': segmented_image_color,
-            'boundary': boundary_image_color,
-            'time': processing_time,
-            'leaves': leaf_count,
-            'mean_area': mean_region_size
-        }
+        # # you can also save into results:
+        # results[max_depth] = {
+        #     'segmented': segmented_image_color,
+        #     'boundary': boundary_image_color,
+        #     'time': processing_time,
+        #     'leaves': leaf_count,
+        #     'mean_area': mean_region_size
+        # }
 
         # Create output image for color segmentation visualization
         segmented_image_color = np.zeros_like(image_color)
